@@ -7,26 +7,6 @@
 * **Banned Overhead:** External dependencies (Pandas, NumPy, Textual, Flask, Node) are completely BANNED.
 * **Orthogonality:** Core codebase remains 100% static. External metadata drives all app behavior.
 
-* Core Design Philosophy: FoxPro / Classic Access / Classic ASP grade procedural stability. A local-first, air-gapped, zero-dependency data engine built strictly around Data Isolation, absolute orthogonality, and the DRY Method. Heavy third-party libraries (Pandas, NumPy, Flask, Node, Textual) are completely banned.
-
-## 📝 OVERVIEW
-STEED is a local‑first, metadata‑driven data engine designed to build powerful, keyboard‑driven business applications without rewriting screens, forms, or workflows. Instead of hardcoding logic, STEED uses profiles, blocks, sub‑blocks, groups, metadata, and masters to define the structure and behavior of the system. The result is a platform that can adapt to almost any domain  -  CRM, case management, inventory, research, cataloging  -  simply by updating configuration files and metadata.
-
-At its core, STEED is built around a stable SQLite database, a deterministic TUI framework, and a procedural architecture inspired by FoxPro, Access, and classic ASP. Everything is explicit, predictable, and designed to last decades. The system launches with python -m steed, loads configuration from INI files, validates the environment, initializes the database, draws the UI frame, and hands control to a dispatcher that routes user input to the appropriate page or form.
-
-STEED organizes data entry through a hierarchy of blocks, sub‑blocks, and groups, each representing a logical section of a form. Profiles define the type of record being worked with (e.g., Client, Case, Product, Sample), while metadata defines the fields, data types, validation rules, and layout. Masters provide controlled vocabularies such as states, statuses, priorities, or categories. Because all of this is externalized, STEED can evolve without modifying the core codebase.
-
-Everything in the app is interdependent but orthogonal. Code remains static  -  metadata drives behavior.
-
-### Analalogy
-- Property → the app
-- House → the database
-- Room → the profile (.xlsx)
-- Cabinet → block
-- Shelf → sub‑block
-- Bin → visual grouping
-- Field → FD001–FD999 (data element)
-
 ## 📐 THE WAREHOUSE GRID HIERARCHY
 An agnostic data-mapping matrix that fits up to 99 fields onto small screens with zero clipping or layout overlap:
 * **Property:** Application Layer. The global root eco-system wrapper path.
