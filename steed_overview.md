@@ -1,6 +1,6 @@
 # 🌐 STEED MASTER ENGINE ARCHITECTURE PROFILE (CORE OVERVIEW)
 
-## 🖥️ DEV ENVIRONMENT & GUARDRAILS
+## 🖥️ DEV ENVIRONMENT & GUARDRAILS - test from docs.
 * **OS / Spec:** Windows 10 Home | i5 CPU | 8GB RAM | 256GB SSD | 13.3" Screen (3-Screen Extended Desktop).
 * **Stack / UI:** Python 3.13.4 | Native `curses` Text User Interface (TUI Only). No modern wrappers.
 * **Paradigm Style:** Pure procedural/functional design. Strictly NO `class` structures allowed.
