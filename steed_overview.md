@@ -1,61 +1,263 @@
-# 🌐 STEED MASTER ENGINE ARCHITECTURE PROFILE (CORE OVERVIEW)
+import curses
 
-## 🖥️ DEV ENVIRONMENT & GUARDRAILS - test from docs.2
-* **OS / Spec:** Windows 10 Home | i5 CPU | 8GB RAM | 256GB SSD | 13.3" Screen (3-Screen Extended Desktop).
-* **Stack / UI:** Python 3.13.4 | Native `curses` Text User Interface (TUI Only). No modern wrappers.
-* **Paradigm Style:** Pure procedural/functional design. Strictly NO `class` structures allowed.
-* **Banned Overhead:** External dependencies (Pandas, NumPy, Textual, Flask, Node) are completely BANNED.
-* **Orthogonality:** Core codebase remains 100% static. External metadata drives all app behavior.
+#=== const_colors.py #===  
+# =========================================================
+# UI CONSTANTS
+# =========================================================
+CP_DEFAULT           = 1
+CP_FRAME             = 2
+CP_DIVIDER           = 3
+CP_LABEL             = 4
+CP_FIELD             = 5
+CP_LOGO              = 6
+CP_LOGO_TEXT         = 7
+CP_HEADER            = 8
+CP_WARNING           = 9
+        
+CP_INPUT             = CP_DEFAULT
+CP_FOCUS             = CP_FIELD
 
-## 📐 THE WAREHOUSE GRID HIERARCHY
-An agnostic data-mapping matrix that fits up to 99 fields onto small screens with zero clipping or layout overlap:
-* **Property:** Application Layer. The global root eco-system wrapper path.
-* **House:** Database Layer. The physical storage container (Decoupled SQLite instance).
-* **Room:** Viewport Layer. The specific dataset metadata definition file layout loaded at runtime.
-* **Cabinet:** Block. High-level categorical layout sections or physical screen frame boxes.
-* **Shelf:** Sub-block. Nested data sub-sections within an active visual block.
-* **Bin:** Visual Group. Container row layout. Programmatically injects a blank screen line on change.
-* **Field:** Data Element. Agnostic storage cells (`F01–F99`). Vertically stacked coordinates `[Label]: [Field]`.
+def init_theme():
+    curses.start_color()
+    curses.use_default_colors()
 
-## 🏛️ DATA LAYOUT TABLES SCHEMA
+    curses.init_pair(CP_DEFAULT, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.init_pair(CP_FRAME, curses.COLOR_BLACK, curses.COLOR_BLACK)
+    curses.init_pair(CP_DIVIDER, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+    curses.init_pair(CP_LABEL, curses.COLOR_CYAN, curses.COLOR_BLACK)
+    curses.init_pair(CP_FIELD, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(CP_LOGO, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(CP_LOGO_TEXT, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.init_pair(CP_HEADER, curses.COLOR_WHITE, curses.COLOR_BLACK)
+    curses.init_pair(CP_WARNING, curses.COLOR_RED, curses.COLOR_BLACK) 
 
-### Table 1: `viewports` (The Metadata Schema Lenses)
-* **Purpose:** Stores compiled, validated structural blueprints parsed from user viewport files.
-* **Keys / Scope:** Scoped strictly using the required tracking column `source_viewport_name` to handle infinite configurations.
-* **Columns Required (21 Fixed):** `field_code`, `parent_field_code`, `field_label`, `block_code`, `sub_block_code`, `group_code`, `sort_order`, `searchable_flag`, `search_results_flag`, `search_results_field_width`, `search_results_order`, `search_list_order`, `data_type`, `default_value`, `display_mask`, `force_case`, `max_length`, `field_length`, `read_only_flag`, `visible_flag`, `lookup_name`.
 
-### Table 2: `content` (The Domain Content Blocks)
-* **Purpose:** Agnostic flat text storage container rows for raw user data records.
-* **Structure:** Composed of `source_content_name`, `source_viewport_name`, and columns `F00` through `F99`.
-* **Identity / Isolation:** All fields are defined as `TEXT NOT NULL DEFAULT ''`. Cell `F00` serves as the CUID (Content Unique Identifier). Row uniqueness is a compound database key index: `F00` + `source_viewport_name`.
+#=== const_footer.py #===  
+FOOTER_ROW1 = "[ESC]:Exit"
+FOOTER_ROW2 = "[MSG]:Press any key to continue"
+FOOTER_COLOR = 2 
 
-## 🛡️ THREE-TIER PIPELINE GATEKEEPER SPECIFICATION
-Data transformations flow down a strict, rigid inheritance chain: **Source File --> `rules.json` --> `.py` Engine Code**.
 
-### Phase 1: Fail-Fast Header Validator
-* Direct ordinal identity check comparing raw text fields against the `REQUIRED_VIEWPORT_COLUMNS` constant.
-* A name misspelling or structural mismatch triggers an immediate short-circuit block: it skips all row checking, populates an explicit `[MISSING]` column checklist, halts DB transactions, and outputs `FINAL RESULT: CRITICAL_STRUCTURAL_FAILURE`.
+#=== const_header.py #===  
+DATA_ENTRY_HEADER_TEXT = "CUID"
+HEADER_COLOR = 1 
 
-### Phase 2: Vertical Matrix Scanner (`validate_file_rows`)
-Executes non-negotiable structural validation loops across the entire input file using the **`VIEWPORT_FIELDS`** constant array (`F01` to `F99` strings) before running any row rules engine functions:
-* **Range Bounds:** Instantly rejects out-of-range field codes (e.g., `F130`, `F100` to `F167`) and cancels processing for that row.
-* **Duplication Filter:** Tracks entries on a temporary memory clipboard set to block duplicate field profile mappings.
-* **Sequence Gap Scan:** Scans keys from the lowest to highest parsed index. If an intermediate sequence number is skipped (e.g., jumping from `F11` to `F13` without `F12`), it appends an explicit broken layout chain error to the report log.
 
-### Phase 3: Horizontal Row Logic (`run_rules_for_row`)
-* **Conditional Visibility:** Active ONLY if `field_label` has length > 0. If active, `block_code` and `sub_block_code` are immediately elevated to strict required fields. If empty or non-integer, they log as fatal errors.
-* **Default Mutations:** 12 layout modifier columns automatically inject fallback values if left blank, mutating the live data bus in-place and logging them based on `rules.json` severity thresholds (`warning`, `information`, `error`).
+#=== const_keylabels.py #===  
+LABEL_F2      = "[F2]:New"
+LABEL_F3      = "[F3]:View"
+LABEL_F4      = "[F4]:Edit"
+LABEL_F5      = "[F5]:Refresh"
+LABEL_F6      = "[F6]:Clone"
+LABEL_F7      = "[F7]:Search"
+LABEL_F8      = "[F8]:Delete"
+LABEL_F9      = "[F9]:Debug"
+LABEL_F10     = "[F10]:Save to Draft"
+LABEL_F12     = "[F12]:Save to DB"
+LABEL_TAB     = "[TAB]:Up/Dn"
+LABEL_ENTER   = "[ENT]:Go"
+LABEL_MSG     = "[MSG]:"
+LABEL_EXIT    = "[ESC]:Exit"
 
-## ⚙️ CORE FILE FOOTPRINT OPERATIONS
-* `scripts/inspection_00.py`: The orchestrator wrapper. Controls arguments (`-dbs`, `-vpt`, `-ini`) and handles short-circuits.
-* `code/func_import_pipeline.py` [32.9 KB]: Positional header parser sniffer. Decoupled from hardcoded listings.
-* `code/func_reporting.py` [7.7 KB]: Consolidated error engine writer. Standardizes report layout logs into `LOG_DIR` unconditionally.
-* `code/backend_sqlite.py` [5.3 KB]: Strict parameterized statements. Appends `WHERE source_viewport_name = ?` to every query to guarantee profile isolation. Ingestion loops execute inside a `BEGIN TRANSACTION` block; single row failures fire an immediate `ROLLBACK`.
+KEY_CTRL_D    = "[CTRL]+D:Delete"
+KEY_CTRL_N    = "[CTRL]+N:New"
+KEY_CTRL_T    = "[CTRL]+T:View Stats"
+KEY_CTRL_S    = "[CTRL]+S:Save Draft"
+KEY_ENTER     = "[ENTER]:Search"
+KEY_TAB       = "[TAB]↑↓ Move"
 
-## 🎯 NEXT IMPLEMENTATION STAGE: USER CONTENT INGESTION
-Apply matching validation checks and balances to process user records into the `content` table. Data strings arrive via `.csv`, `.txt`, or `.xlsx`, but layouts feature literal database column headers (`F01` to `F99`) containing unknown rows and domain-agnostic subject matter.
 
-### Prioritized Action Checklist (Backend Mechanics Only):
-1. **Validation-to-Ingestion Wiring:** Route clean zipped dictionaries from the parsing pipeline straight into atomic transaction loops inside `backend_sqlite.py`. Wrap the pass in a transaction block to trigger a `ROLLBACK` on an `[ERROR]` match.
-2. **Audit Ledger Serialization (`func_util_ledger.py`):** Secure the append-only transaction ledger logs within `LEDGER_DIR`. Enforce a low-level character substitution filter to swap literal pipe signs (`|`) with a safe sequence (`--`) within string values to keep ledger counts fixed and prevent parsing drift during data rollbacks.
-3. **Dynamic INI Capacity Scanner:** Replace hardcoded row limitation checks with a configuration scanner that reads limit constraints straight from the active profile inside `INI_DIR`, falling back to the hardwired threshold of **99 rows** if missing.
+#=== const_keycodes.py #===  
+
+# Basic keys (single definitions only)
+K_TAB          = 9
+K_ENTER        = 10
+K_RETURN       = 13
+K_SPACE        = 32
+K_ESC          = 27
+K_KP_ENTER     = 459
+K_INSERT       = 277
+K_DELETE       = 127
+K_BACKSPACE    = 8
+K_BACKSPACE_ALT = 127
+
+# Arrow keys
+K_UP           = curses.KEY_UP
+K_DOWN         = curses.KEY_DOWN
+K_RIGHT        = curses.KEY_RIGHT
+K_LEFT         = curses.KEY_LEFT
+
+# Navigation
+K_HOME         = curses.KEY_HOME
+K_END          = curses.KEY_END
+K_PAGEUP       = curses.KEY_PPAGE
+K_PAGEDOWN     = curses.KEY_NPAGE
+K_CURSES_BACKSPACE = curses.KEY_BACKSPACE
+K_BTAB         = curses.KEY_BTAB
+
+# CTRL keys
+K_CTRL_D       = 4
+K_CTRL_I       = 9
+K_CTRL_L       = 12
+K_CTRL_N       = 14
+K_CTRL_O       = 15
+K_CTRL_S       = 19
+K_CTRL_T       = 20
+K_CTRL_W       = 23
+
+# Letter keys
+K_Q            = ord('q')
+K_Q_UPPER      = ord('Q')
+
+# Weird F4 variants
+K_F4_ALT1      = 268
+K_F4_ALT2      = 1004
+K_F4_ALT3      = 52
+
+# Function keys
+K_F1  = 264 + 1
+K_F2  = 264 + 2
+K_F3  = 264 + 3
+K_F4  = 264 + 4
+K_F5  = 264 + 5
+K_F6  = 264 + 6
+K_F7  = 264 + 7
+K_F8  = 264 + 8
+K_F9  = 264 + 9
+K_F10 = 264 + 10
+K_F11 = 264 + 11
+K_F12 = 264 + 12
+
+# ENTER variants (kept exactly as you intended)
+K_ALL_ENTER_BASE = (
+    10, 13,
+    343, 360,
+    458, 459, 463,
+    269,
+    13+256, 13+512, 13+1024
+)
+
+K_ALL_ENTER = list(K_ALL_ENTER_BASE) + [
+    curses.KEY_ENTER,
+    getattr(curses, "KEY_COMMAND", -1),
+]
+
+
+#=== const_layout.py #===  
+POPUP_Y            = 4
+POPUP_X            = 4
+POPUP_MAX_HEIGHT   = 20
+POPUP_MIN_WIDTH    = 24
+POPUP_MAX_WIDTH    = 80
+
+GROUP_SPACER_MODE  = "blank"
+FILL_CHAR          = " "
+
+HEADER_HEIGHT        = 5
+FOOTER_STATIC_ROWS   = 2
+FOOTER_STATUS_ROWS   = 1
+FOOTER_DIVIDER_ROWS  = 1
+FOOTER_HEIGHT        = FOOTER_STATIC_ROWS + FOOTER_STATUS_ROWS + FOOTER_DIVIDER_ROWS
+
+FORM_DIVIDER_Y      = 4
+FORM_LABEL_Y_START  = FORM_DIVIDER_Y + 1
+FORM_LABEL_X        = 2
+FORM_FIELD_X        = 25
+
+
+ 
+#=== const_menu.py #===  
+# ---------------------------------------------------------
+# MENU CONSTANTS (PURE PYTHON)
+# ---------------------------------------------------------
+
+# ----- Daily Use Files -----
+DAILY_USE_FILES_LABEL      = "Daily Use Files"
+DAILY_USE_FILES_CODE       = None
+
+DB_SELECT_LABEL            = "Select Database"
+DB_SELECT_CODE             = "DB"
+
+VIEWPORT_SELECT_LABEL       = "Select Viewport"
+VIEWPORT_SELECT_CODE        = "PRF"
+
+INI_SELECT_LABEL           = "Select Initialization"
+INI_SELECT_CODE            = "INI"
+
+RUN_DATA_ENTRY_LABEL       = "Run Data Entry"
+RUN_DATA_ENTRY_CODE        = "SEARCH"
+
+
+# ----- Metadata -----
+METADATA_LABEL             = "Metadata"
+METADATA_CODE              = None
+
+DB_SELECT_META_LABEL       = "Select Database"
+DB_SELECT_META_CODE        = "DB"
+
+XLSX_SELECT_LABEL          = "Select Metadata XLSX"
+XLSX_SELECT_CODE           = "XLSX"
+
+LOAD_METADATA_LABEL        = "Load Metadata Into DB"
+LOAD_METADATA_CODE         = "XFR"
+
+XLSX_SELECT_CONTENT_LABEL  = "Select Content XLSX"
+XLSX_SELECT_CONTENT_CODE   = "XLSXCONTENT"
+
+LOAD_CONTENT_LABEL        = "Load Content Into DB"
+LOAD_CONTENT_CODE         = "CONTENT"
+
+
+# ----- Create New -----
+CREATE_NEW_LABEL           = "Create New"
+CREATE_NEW_CODE            = None
+
+NEW_DB_LABEL               = "New Database"
+NEW_DB_CODE                = "NEW_DB"
+
+NEW_VIEWPORT_LABEL          = "New Viewport"
+NEW_VIEWPORT_CODE           = "NEW_VPT"
+
+
+# ----- Utilities -----
+UTILITIES_LABEL            = "Utilitites"
+UTILITIES_CODE             = None
+
+BACKUP_DB_LABEL            = "Backup All"
+BACKUP_DB_CODE             = "BKP"
+
+GENERATE_BOOT_LABEL        = "Generate Boot Script"
+GENERATE_BOOT_CODE         = "BOOT"
+
+GENERATE_SHORTCUT_LABEL    = "Make Shortcut"
+GENERATE_SHORTCUT_CODE     = "SHORTCUT"
+ 
+# ---------------------------------------------------------
+# MENU ITEMS (BUILT FROM CONSTANTS ABOVE)
+# ---------------------------------------------------------
+MENU_ITEMS = [
+    # ----- Daily Use Files -----
+    {"label": DAILY_USE_FILES_LABEL, "code": DAILY_USE_FILES_CODE},
+    {"label": DB_SELECT_LABEL,       "code": DB_SELECT_CODE},
+    {"label": VIEWPORT_SELECT_LABEL,  "code": VIEWPORT_SELECT_CODE},
+    {"label": INI_SELECT_LABEL,      "code": INI_SELECT_CODE},
+    {"label": RUN_DATA_ENTRY_LABEL,  "code": RUN_DATA_ENTRY_CODE},
+
+    # ----- Metadata -----
+    {"label": METADATA_LABEL,        "code": METADATA_CODE},
+    {"label": DB_SELECT_META_LABEL,  "code": DB_SELECT_META_CODE},
+    {"label": XLSX_SELECT_LABEL,     "code": XLSX_SELECT_CODE},
+    {"label": LOAD_METADATA_LABEL,   "code": LOAD_METADATA_CODE},
+    {"label": XLSX_SELECT_CONTENT_LABEL,     "code": XLSX_SELECT_CONTENT_CODE},
+    {"label": LOAD_CONTENT_LABEL,    "code": LOAD_CONTENT_CODE},
+
+    # ----- Create New -----
+    {"label": CREATE_NEW_LABEL,      "code": CREATE_NEW_CODE},
+    {"label": NEW_DB_LABEL,          "code": NEW_DB_CODE},
+    {"label": NEW_VIEWPORT_LABEL,     "code": NEW_VIEWPORT_CODE},
+
+    # ----- Utilities -----
+    {"label": UTILITIES_LABEL,       "code": UTILITIES_CODE},
+    {"label": BACKUP_DB_LABEL,       "code": BACKUP_DB_CODE},
+    {"label": GENERATE_BOOT_LABEL,   "code": GENERATE_BOOT_CODE},
+]
