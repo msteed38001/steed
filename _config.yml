@@ -1,9 +1,15 @@
-remote_theme: Balancingrock/classic-jekyll-theme
+remote_theme: analytiqhub/analytiq-pages
 plugins:
   - jekyll-remote-theme
 
-title: Your site title
-description: Your description
+title: Steed
+description: "I close the gap between business operations and data architecture."
 
-secondary_column: none
-tertiary_column: none
+header_pages:
+  - title: "Resources"
+    url: "#"
+    children:
+      - title: "About"
+        url: "/about/"
+      - title: "Projects"
+        url: "/projects/"
