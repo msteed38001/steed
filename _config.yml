@@ -1,15 +1,3 @@
-remote_theme: analytiqhub/analytiq-pages
-plugins:
-  - jekyll-remote-theme
-
+theme: minima
 title: Steed
 description: "I close the gap between business operations and data architecture."
-
-header_pages:
-  - title: "Resources"
-    url: "#"
-    children:
-      - title: "About"
-        url: "/about/"
-      - title: "Projects"
-        url: "/projects/"
