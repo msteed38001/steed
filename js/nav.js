@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     var NAV = [
-        { label: 'Data Engineering', href: 'index.html' },
+        { label: 'Home', href: 'index.html' },
+		{ label: 'Test', href: 'viewer.html?page=pages/tui_social_media.html' },
         { label: 'Core Profile', href: 'index.html#overview' },
         { label: 'Production Pipelines', href: 'index.html#projects' },
         {
