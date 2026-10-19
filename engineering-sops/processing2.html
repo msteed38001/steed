@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP: Nightly ERP Inventory Pipeline Validation & Ingestion</title>
+    <link rel="stylesheet" href="../css/styles.css">
+	
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0 auto; padding: 20px; }-->
+        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        pre { font-family: Consolas, monospace; background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        code { font-family: Consolas, monospace; }
+    </style>	
+</head>
+<body>
+
+    <nav id="site-nav"></nav>
+    <script src="../js/nav.js"></script>
+
+    <header class="sop-header">
+        <p><a href="../index.html" style="text-decoration: none; font-weight: 600; color: #444444;">&larr; Return to Portfolio</a></p>
+        <h1 style="margin-top: 1rem;">Standard Operating Procedure (SOP)222</h1>
+        <p><strong>Document ID:</strong> SOP-DE-2026-004 | <strong>Target System:</strong> Distribution ERP Inventory Core</p>
+    </header>
+
+    <main>	
+	
+        <section id="purpose">
+
+<h1>Level 4: BOM Reference22222</h1>
+<h2>Purpose</h2>
+<p>BOM (Byte Order Mark) is metadata at the beginning of a file that tells software how to interpret the file's encoding. It is invisible in most editors, behaves unpredictably across systems, and can break pipelines silently. This document explains what BOM is, how to detect it, how to fix it, and why it's often the last thing data professionals think to check.</p>
+<hr />
+<h2>1. What is BOM?</h2>
+<p><strong>Byte Order Mark (BOM)</strong> is a sequence of bytes at the start of a file that indicates the file's encoding and byte order.</p>
+<table>
+<thead>
+<tr>
+<th>Encoding</th>
+<th>BOM Bytes</th>
+<th>Hex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UTF-8</td>
+<td><code>EF BB BF</code></td>
+<td><code>\xef\xbb\xbf</code></td>
+</tr>
+<tr>
+<td>UTF-16 BE</td>
+<td><code>FE FF</code></td>
+<td><code>\xfe\xff</code></td>
+</tr>
+<tr>
+<td>UTF-16 LE</td>
+<td><code>FF FE</code></td>
+<td><code>\xff\xfe</code></td>
+</tr>
+<tr>
+<td>UTF-32 BE</td>
+<td><code>00 00 FE FF</code></td>
+<td><code>\x00\x00\xfe\xff</code></td>
+</tr>
+<tr>
+<td>UTF-32 LE</td>
+<td><code>FF FE 00 00</code></td>
+<td><code>\xff\xfe\x00\x00</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>UTF-8 BOM is the most common culprit.</strong></p>
+<hr />
+<h2>2. What BOM Looks Like</h2>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What You See</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Notepad++</td>
+<td>Nothing visible (status bar shows "UTF-8-BOM")</td>
+</tr>
+<tr>
+<td>VS Code</td>
+<td>Nothing visible (bottom bar shows "UTF-8 with BOM")</td>
+</tr>
+<tr>
+<td>Excel</td>
+<td>Nothing visible</td>
+</tr>
+<tr>
+<td>Calc</td>
+<td>Nothing visible</td>
+</tr>
+<tr>
+<td>Hex editor</td>
+<td><code>EF BB BF</code> at the start</td>
+</tr>
+<tr>
+<td>Python (repr)</td>
+<td><code>\ufeff</code> at the start of the string</td>
+</tr>
+<tr>
+<td>SqL</td>
+<td>Breaks silently</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>3. Why BOM is a Problem</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Invisible</td>
+<td>You can't see it</td>
+</tr>
+<tr>
+<td>Silent</td>
+<td>Most tools don't warn you</td>
+</tr>
+<tr>
+<td>Destructive</td>
+<td>Breaks parsers, joins, comparisons</td>
+</tr>
+<tr>
+<td>Persistent</td>
+<td>Survives copy/paste, file conversions</td>
+</tr>
+<tr>
+<td>Unpredictable</td>
+<td>Some tools handle it, others don't</td>
+</tr>
+<tr>
+<td>Overlooked</td>
+<td>No one thinks about file headers</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>4. How BOM Breaks Things</h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>What Happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CSV import</td>
+<td>First field contains <code>\ufeff</code> -&gt; field name mismatch</td>
+</tr>
+<tr>
+<td>JSON parse</td>
+<td>Invalid JSON -&gt; parse error</td>
+</tr>
+<tr>
+<td>SqL <code>WHERE</code></td>
+<td><code>column = 'value'</code> fails (value has BOM)</td>
+</tr>
+<tr>
+<td>API</td>
+<td>Sending BOM as part of payload -&gt; signature mismatch</td>
+</tr>
+<tr>
+<td>ETL</td>
+<td>Pipeline fails at first record -&gt; no error message</td>
+</tr>
+<tr>
+<td>File comparison</td>
+<td>Two identical files look different -&gt; <code>diff</code> fails</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>5. How to Detect BOM</h2>
+<h3>In Notepad++</h3>
+<ol>
+<li>Open the file</li>
+<li>Look at the status bar (bottom right)</li>
+<li>If it says <strong>"UTF-8-BOM"</strong>, BOM is present</li>
+<li>If it says <strong>"UTF-8"</strong>, BOM is not present</li>
+</ol>
+<h3>In VS Code</h3>
+<ol>
+<li>Open the file</li>
+<li>Look at the bottom bar</li>
+<li>If it says <strong>"UTF-8 with BOM"</strong>, BOM is present</li>
+<li>If it says <strong>"UTF-8"</strong>, BOM is not present</li>
+</ol>
+<h3>In Python</h3>
+<pre>
+def has_bom(filepath: str) -> bool:
+    """Check if a file has a BOM marker."""
+    With open(filepath, "rb") as f:
+        first_bytes = f.Read(3)
+    return first_bytes.Startswith(b'\xef\xbb\xbf')
+
+
+        </section>
+</main>
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Michael Steed. Internal Technical Architecture Documentation.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

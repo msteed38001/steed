@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP: Nightly ERP Inventory Pipeline Validation & Ingestion</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+    <nav id="site-nav"></nav>
+    <script src="../js/nav.js"></script>
+
+    <header class="sop-header">
+        <p><a href="../index.html" style="text-decoration: none; font-weight: 600; color: #444444;">&larr; Return to Portfolio</a></p>
+        <h1 style="margin-top: 1rem;">Standard Operating Procedure (SOP)</h1>
+        <p><strong>Document ID:</strong> SOP-DE-2026-004 | <strong>Target System:</strong> Distribution ERP Inventory Core</p>
+    </header>
+
+    <main>
+        <section id="purpose">
+            <h2>1. Operational Objective</h2>
+            <p>This document details the recovery loops, schema enforcement rules, and repeatable execution steps for the nightly extraction, isolation, and processing of legacy industrial ERP inventory mutations.</p>
+        </section>
+
+        <section id="lineage">
+            <h2>2. Data Lineage Matrix</h2>
+            <p>Data must transition through three isolated storage phases to protect production analytical data warehouses from upstream ledger transactional drift.</p>
+            
+            <pre style="background: #ffffff; border: 1px solid #e0e0e0; padding: 1rem; font-family: monospace; overflow-x: auto; line-height: 1.4; color: #111111;">
++-------------------+      +-------------------+      +-------------------+
+
+|  [Source ERP]     | ---> |  [Isolated Stage] | ---> | [Validated Core]  |
+|  Raw Export       |      |  Flat File Ingest |      | Operational Table |
+|  (Unindexed Text) |      |  (Schema Check)   |      | (Indexed Metrics) |
++-------------------+      +-------------------+      +-------------------+
+            </pre>
+        </section>
+
+        <section id="validation-rules">
+            <h2>3. Schema Enforcement & Boundary Values</h2>
+            <p>Every inbound file must conform to deterministic structural checks prior to warehouse ingestion. Any record failing these bounds is automatically isolated to prevent corrupting tracking ledgers.</p>
+            
+            <ul style="list-style-type: none; margin-bottom: 1.5rem;">
+                <li style="margin-bottom: 0.5rem;"><strong>File Format Constraint:</strong> Fixed-width text format or comma-delimited ASCII text files only.</li>
+                <li style="margin-bottom: 0.5rem;"><strong>Required Fields:</strong> Transaction_ID (String, Alpha-Numeric), Part_Number (String), Mutated_Qty (Integer), Unit_Cost (Decimal).</li>
+                <li style="margin-bottom: 0.5rem;"><strong>Boundary Intercepts:</strong> If a row contains a Mutated_Qty exceeding physical warehouse storage capacities or an unverified negative value, the engine halts automation and moves the entry to a manual verification queue.</li>
+            </ul>
+        </section>
+
+        <section id="recovery">
+            <h2>4. Recovery & Backfill Protocol</h2>
+            <p>When an upstream source failure drops a connection mid-extraction, follow this sequence to perform a clean, non-duplicate run:</p>
+            
+            <ol style="margin-left: 1.5rem; margin-bottom: 1.5rem;">
+                <li style="margin-bottom: 0.5rem;"><strong>Flush Target Staging:</strong> Run an explicit purge on the temporary staging tables for the target date to ensure zero partial duplicate blocks exist.</li>
+                <li style="margin-bottom: 0.5rem;"><strong>Verify Source File Integrity:</strong> Inspect the structural timestamp on the isolated backup directory to confirm the raw file export was successfully re-driven by the distributor server.</li>
+                <li style="margin-bottom: 0.5rem;"><strong>Re-execute Batch Automation:</strong> Execute the procedural extraction script directly from the terminal console using the manual date parameter flag.</li>
+            </ol>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Michael Steed. Internal Technical Architecture Documentation.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

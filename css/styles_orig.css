@@ -1,0 +1,180 @@
+/* ==========================================================================
+   Data Engineering Portfolio - Minimalist CSS (Dependency-Free)
+   ========================================================================== */
+
+/* 1. Global Reset & Base Typography */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #222222;
+    background-color: #fcfcfc;
+    padding: 2rem 1rem;
+}
+
+/* Container limits line length for better readability */
+body > *, main > section {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+/* 2. Header and Navigation */
+header {
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #222222;
+    padding-bottom: 1.5rem;
+}
+
+header h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #111111;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    font-size: 1.15rem;
+    color: #555555;
+}
+
+nav {
+    margin-bottom: 3rem;
+    display: flex;
+    gap: 1.5rem;
+}
+
+nav a {
+    color: #111111;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+}
+
+nav a:hover {
+    border-bottom: 2px solid #222222;
+}
+
+/* 3. Layout and Sections */
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 3.5rem;
+    margin-bottom: 4rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111111;
+    border-bottom: 1px solid #dddddd;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* 4. Project Entry Layout */
+.project-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-radius: 4px;
+}
+
+.project-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #111111;
+    margin-bottom: 0.75rem;
+}
+
+.project-card h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #444444;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin: 1.25rem 0 0.25rem 0;
+}
+
+.project-card p {
+    color: #333333;
+    font-size: 1rem;
+}
+
+/* Tech Stack Inline Tags */
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tech-tag {
+    background-color: #f0f0f0;
+    color: #333333;
+    font-family: ui-monospace, SFMono-Regular, SF Pro Mono, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+}
+
+/* 5. Systems and Capabilities List */
+#expertise ul {
+    list-style-type: none;
+}
+
+#expertise li {
+    margin-bottom: 0.75rem;
+    padding-left: 1rem;
+    position: relative;
+}
+
+#expertise li::before {
+    content: "■";
+    color: #666666;
+    font-size: 0.7rem;
+    position: absolute;
+    left: 0;
+    top: 2px;
+}
+
+#expertise strong {
+    color: #111111;
+}
+
+/* 6. Footer */
+footer {
+    border-top: 1px solid #dddddd;
+    padding-top: 1.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #777777;
+}
+
+/* 7. Responsive Breakpoint */
+@media (max-width: 600px) {
+    body {
+        padding: 1rem 0.5rem;
+    }
+    
+    .project-card {
+        padding: 1.25rem;
+    }
+    
+    header h1 {
+        font-size: 1.75rem;
+    }
+}
