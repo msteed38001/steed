@@ -6,6 +6,57 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     {% seo %}
+
+<!-- Dropdown Navigation Engine (Fixed Overlap) -->
+<style>
+  .nav-container { 
+    margin-top: 20px; 
+    border-top: 1px solid #4f4f4f; 
+    padding-top: 10px; 
+    display: flex;
+    position: relative;
+    z-index: 999; /* Force menu stack to top */
+  }
+  .nav-item { 
+    position: relative; 
+    margin-right: 20px; 
+    display: inline-block; 
+  }
+  .nav-link { 
+    color: #00ff00; 
+    text-decoration: none; 
+    font-weight: bold; 
+    cursor: pointer; 
+    padding-bottom: 10px; /* Bridge gap so mouse pointer doesn't drop layout */
+  }
+  .dropdown-content { 
+    display: none; 
+    position: absolute; 
+    background-color: #151515; 
+    min-width: 160px; 
+    border: 1px solid #4f4f4f; 
+    z-index: 1000; 
+    margin-top: 5px; 
+    padding: 5px 0; 
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+  }
+  .dropdown-content a { 
+    color: #00ff00; 
+    padding: 8px 12px; 
+    text-decoration: none; 
+    display: block; 
+    font-weight: bold; 
+    font-size: 0.9em; 
+  }
+  .dropdown-content a:hover { 
+    background-color: #222222; 
+  }
+  /* The active trigger rule */
+  .nav-item:hover .dropdown-content { 
+    display: block !important; 
+  }
+</style>
+    
   </head>
 
   <body>
@@ -17,15 +68,6 @@
         <h2>{{ site.description | default: site.github.project_tagline }}</h2>
 
 <!-- Dropdown Navigation Engine -->
-<style>
-  .nav-container { margin-top: 20px; border-top: 1px solid #4f4f4f; padding-top: 10px; display: flex; }
-  .nav-item { position: relative; margin-right: 20px; display: inline-block; }
-  .nav-link { color: #00ff00; text-decoration: none; font-weight: bold; cursor: pointer; }
-  .dropdown-content { display: none; position: absolute; background-color: #151515; min-width: 160px; border: 1px solid #4f4f4f; z-index: 1; margin-top: 5px; padding: 5px 0; }
-  .dropdown-content a { color: #00ff00; padding: 8px 12px; text-decoration: none; display: block; font-weight: bold; font-size: 0.9em; }
-  .dropdown-content a:hover { background-color: #222222; }
-  .nav-item:hover .dropdown-content { display: block; }
-</style>
 
 <nav class="nav-container">
   {% for item in site.data.navigation %}
