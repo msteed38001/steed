@@ -4,4 +4,4 @@ layout: default
 
 # Welcome
 
-This is my site using the Hacker theme.
+I close the gap between business operations and data architecture - specifically the product data layer in distribution ERPs.
