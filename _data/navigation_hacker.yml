@@ -1,9 +1,0 @@
-- name: Home
-  link: /
-- name: Resources
-  link: "#"
-  subitems:
-    - name: About Me
-      link: /about/
-    - name: Projects
-      link: /projects/
