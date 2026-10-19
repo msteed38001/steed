@@ -1,0 +1,6 @@
+remote_theme: Balancingrock/classic-jekyll-theme
+plugins:
+  - jekyll-remote-theme
+
+title: Your site title
+description: Your description
