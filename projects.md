@@ -1,7 +1,5 @@
 ---
 layout: page
 title: Projects
-permalink: /projects/
 ---
-
-Here is the content for the Projects page.
+This is the projects page.
