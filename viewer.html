@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Docs</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <nav id="site-nav"></nav>
+    <script src="js/nav.js"></script>
+
+    <div class="jumbotron">
+        <div class="container">
+            <h1 id="doc-title">Loading…</h1>
+            <p class="lead">Generated reference documents.</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <div id="doc-container">Loading…</div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Michael Steed. Built entirely local, clean, and dependency-free.</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var params = new URLSearchParams(window.location.search);
+        var page = params.get('page') || 'md_test.html';
+
+        fetch(page)
+            .then(function (r) {
+                if (!r.ok) throw new Error('Failed to load ' + page);
+                return r.text();
+            })
+            .then(function (html) {
+                var doc = new DOMParser().parseFromString(html, 'text/html');
+
+                // Jumbotron title from doc's <title>
+                var t = doc.querySelector('title');
+                if (t && t.textContent.trim()) {
+                    var titleText = t.textContent.trim();
+                    document.getElementById('doc-title').textContent = titleText;
+                    document.title = titleText;
+                }
+
+                // Inject generated page's styles, scoped under .generated-doc
+                doc.querySelectorAll('style').forEach(function (s) {
+                    var css = s.textContent
+                        .replace(/(^|\})\s*body\s*\{/g, '$1 .generated-doc {');
+                    var st = document.createElement('style');
+                    st.textContent = css;
+                    document.head.appendChild(st);
+                });
+
+                // Inject generated page's body content, scoped
+                var container = document.getElementById('doc-container');
+                container.innerHTML = '';
+                var wrapper = document.createElement('div');
+                wrapper.className = 'generated-doc';
+                while (doc.body.firstChild) {
+                    wrapper.appendChild(doc.body.firstChild);
+                }
+                container.appendChild(wrapper);
+            })
+            .catch(function (err) {
+                document.getElementById('doc-container').textContent = 'Error: ' + err.message;
+            });
+    });
+    </script>
+
+</body>
+</html>
