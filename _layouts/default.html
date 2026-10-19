@@ -1,5 +1,36 @@
-<nav class="site-nav">
-  {% for item in site.data.navigation %}
-    <a href="{{ item.link | relative_url }}">{{ item.name }}</a>
-  {% endfor %}
-</nav>
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    {% seo %}
+  </head>
+
+  <body>
+    <header>
+      <div class="container">
+        <a id="a-title" href="{{ '/' | relative_url }}">
+          <h1>{{ site.title | default: site.github.repository_name }}</h1>
+        </a>
+        <h2>{{ site.description | default: site.github.project_tagline }}</h2>
+
+        <!-- Your Custom Data Navigation Menu -->
+        <nav style="margin-top: 20px; border-top: 1px solid #4f4f4f; padding-top: 10px;">
+          {% for item in site.data.navigation %}
+            <a href="{{ item.link | relative_url }}" style="color: #00ff00; margin-right: 20px; text-decoration: none; font-weight: bold;">
+              [{{ item.name }}]
+            </a>
+          {% endfor %}
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        {{ content }}
+      </section>
+    </div>
+  </body>
+</html>
