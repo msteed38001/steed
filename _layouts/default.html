@@ -19,11 +19,12 @@
         <!-- Your Custom Data Navigation Menu -->
         <nav style="margin-top: 20px; border-top: 1px solid #4f4f4f; padding-top: 10px;">
           {% for item in site.data.navigation %}
-            <a href="{{ item.link | relative_url }}" style="color: #00ff00; margin-right: 20px; text-decoration: none; font-weight: bold;">
+            <a href="{{ item.link | prepend: site.baseurl }}" style="color: #00ff00; margin-right: 20px; text-decoration: none; font-weight: bold;">
               [{{ item.name }}]
             </a>
           {% endfor %}
         </nav>
+
       </div>
     </header>
 
