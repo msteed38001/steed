@@ -1,7 +1,7 @@
 ---
-layout: default
+layout: page
 title: Projects
 permalink: /projects/
 ---
 
-Here is the content of the Projects page.
+Here is the content for the Projects page.
