@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>I built my own content engine.</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; max-width: 95%; margin: 0 auto; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        pre { font-family: Consolas, monospace; background: #f4f4f4; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        code { font-family: Consolas, monospace; }
+    </style>
+</head>
+<body>
+<h3>From TUI Rows to Print-Ready Assets</h3>
+<p>It turns raw Markdown and TOML stylesheets into print-ready PDFs and PNGs.</p>
+<p>I dont use manual, drag-and-drop design canvases. They break down completely when you need programmatic layout stability and high-volume throughput. Instead, I built a custom Python TUI framework that treats data rows as decoupled multi-format assets.</p>
+<pre>
+Code            Name                                Sort  Batch
+──────────────────────────────────────────────────────────────────────
+tui social med… I built a social media app inside … 0     ins001
+content is sep… Content is separated from design.   1     Ins001
+case            Directory Created. Template Not Fo… 0     case      
+render code     The Code Error I Can't Show         0     render    
+program symbols Programming Symbols                       1010      
+margin vs mark… Margin vs Markup                    0     margin    
+why margin      Why Gross Margin Uses Cost          1     margin    
+margin vs mark… Margin/Markup Graphics              2     margin    
+wrong count     The Count Was Off                   0     count_off
+──────────────────────────────────────────────────────────────────────
+/
+Preset: All  |  Stack: ins001
+Row: 1/2| [Ent]Det [Ins]New [/]Srch [F]Filt [1-9]Sort [F3]Clr 
+</pre>
+<div id="doc-subtitle-data" style="display:none;">Within curses and about 8.5k lines of code, and 30 tomls.</div>
+</body>
+</html>
