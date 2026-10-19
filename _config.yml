@@ -1,6 +1,3 @@
 theme: minima
 title: Steed
 description: "I close the gap between business operations and data architecture."
-header_pages:
-  - about.md
-  - projects.md
