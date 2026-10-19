@@ -1,7 +1,7 @@
 ---
-layout: default
-title: "About Me"
+layout: page
+title: About
 permalink: /about/
 ---
 
-# About Me
+Here is the content for the About page.
